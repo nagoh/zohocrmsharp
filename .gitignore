@@ -8,3 +8,5 @@ TestResults
 *.suo
 /src/Deveel.ZohoCRM/_ReSharper.Deveel.ZohoCRM
 /src/packages
+/tools
+/build
