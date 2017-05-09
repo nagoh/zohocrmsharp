@@ -26,7 +26,7 @@ Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
 {
-	if (!string.IsNullOrEmpty(EnvironmentVariable("build.number"))) {
+	if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("build.number"))) {
 		version	= EnvironmentVariable("build.number");
 	}
 	
@@ -49,8 +49,8 @@ Task("Package")
 Task("Push")
 	.IsDependentOn("Package")
 	.Does(() => {
-		var apiKey = EnvironmentVariable("env.NugetApiKey");
-		var nugetPublishUrl = EnvironmentVariable("env.NugetUrl");
+		var apiKey = Environment.GetEnvironmentVariable("env.NugetApiKey");
+		var nugetPublishUrl = Environment.GetEnvironmentVariable("env.NugetUrl");
 
 		 NuGetPush("./artefacts/PartPay.ZohoCrm." + version + ".nupkg", new NuGetPushSettings {
 			 Source = nugetPublishUrl,
