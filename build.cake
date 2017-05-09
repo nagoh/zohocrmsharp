@@ -5,6 +5,7 @@
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
+var version = "1.0.0";
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -25,6 +26,10 @@ Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
 {
+	if (!string.IsNullOrEmpty(EnvironmentVariable("build.number"))) {
+		version	= EnvironmentVariable("build.number");
+	}
+	
     MSBuild("./src/Deveel.ZohoCRM.sln", settings =>
         settings.SetConfiguration(configuration));
 });
@@ -33,8 +38,9 @@ Task("Package")
 	.IsDependentOn("Build")
 	.Does(() => 
 	{
-		  var nuGetPackSettings   = new NuGetPackSettings {
-			OutputDirectory         = "./artefacts"
+		  var nuGetPackSettings = new NuGetPackSettings {
+				OutputDirectory = "./artefacts",
+				Version = version
 		  };
 
 		  NuGetPack("./src/Deveel.ZohoCRM/Deveel.ZohoCRM.nuspec", nuGetPackSettings);
@@ -46,7 +52,7 @@ Task("Push")
 		var apiKey = EnvironmentVariable("env.NugetApiKey");
 		var nugetPublishUrl = EnvironmentVariable("env.NugetUrl");
 
-		 NuGetPush("./artefacts/PartPay.ZohoCrm.1.0.0.nupkg", new NuGetPushSettings {
+		 NuGetPush("./artefacts/PartPay.ZohoCrm." + version + ".nupkg", new NuGetPushSettings {
 			 Source = nugetPublishUrl,
 			 ApiKey = apiKey
 		 });

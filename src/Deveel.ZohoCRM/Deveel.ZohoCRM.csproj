@@ -95,6 +95,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Deveel.ZohoCRM.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
