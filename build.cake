@@ -26,8 +26,8 @@ Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
 {
-	if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("build.number"))) {
-		version	= EnvironmentVariable("build.number");
+	if (!string.IsNullOrEmpty(Argument("BuildNumber", ""))) {
+		version	= Argument("BuildNumber", version);
 	}
 	
     MSBuild("./src/Deveel.ZohoCRM.sln", settings =>
@@ -49,14 +49,16 @@ Task("Package")
 Task("Push")
 	.IsDependentOn("Package")
 	.Does(() => {
-		var apiKey = Environment.GetEnvironmentVariable("env.NugetApiKey");
-		var nugetPublishUrl = Environment.GetEnvironmentVariable("env.NugetUrl");
+		var apiKey = Argument("NugetApiKey", "");
+		var nugetPublishUrl = Argument("NugetUrl", "");
+
+		if (string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(nugetPublishUrl))
+			return;
 
 		 NuGetPush("./artefacts/PartPay.ZohoCrm." + version + ".nupkg", new NuGetPushSettings {
 			 Source = nugetPublishUrl,
 			 ApiKey = apiKey
 		 });
-		
 	});
 
 //////////////////////////////////////////////////////////////////////
