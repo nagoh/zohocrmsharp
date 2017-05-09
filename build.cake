@@ -44,7 +44,7 @@ Task("Push")
 	.IsDependentOn("Package")
 	.Does(() => {
 		var apiKey = EnvironmentVariable("env.NugetApiKey");
-		var nugetPath = EnvironmentVariable("env.NugetUrl");
+		var nugetPublishUrl = EnvironmentVariable("env.NugetUrl");
 
 		 NuGetPush("./artefacts/PartPay.ZohoCrm.1.0.0.nupkg", new NuGetPushSettings {
 			 Source = nugetPublishUrl,
