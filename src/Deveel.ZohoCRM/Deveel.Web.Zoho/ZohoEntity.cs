@@ -76,10 +76,27 @@ namespace Deveel.Web.Zoho {
 		public void SetValue<T>(string fieldName, T value) {
 			if (Equals(default(T), value)) {
 				fields.Remove(fieldName);
-			} else if (!typeof (T).IsPrimitive &&
-				typeof(T) != typeof(decimal)) {
+			}
+            else if (typeof(T) == typeof(DateTime))
+			{
+			    var date = (DateTime) (object) value;
+
+			    if (date.TimeOfDay == default(TimeSpan))
+			    {
+			        fields[fieldName] = date.ToString("yyyy-MM-dd");
+			    }
+			    else
+			    {
+			        fields[fieldName] = date.ToString("yyyy-MM-dd HH:mm:ss");
+                }
+                
+			}
+            else if (!typeof (T).IsPrimitive && typeof(T) != typeof(decimal))
+            {
 				fields[fieldName] = value.ToString();
-			} else {
+			}
+            else
+            {
 				fields[fieldName] = value;
 			}
 		}
