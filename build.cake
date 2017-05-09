@@ -43,8 +43,8 @@ Task("Package")
 Task("Push")
 	.IsDependentOn("Package")
 	.Does(() => {
-		var apiKey = TeamCity.Environment.GetEnvironmentString("NugetApiKey");
-		var nugetPath = TeamCity.Environment.GetEnvironmentString("NugetUrl");
+		var apiKey = BuildSystem.TeamCity.Environment.GetEnvironmentString("NugetApiKey");
+		var nugetPath = BuildSystem.TeamCity.Environment.GetEnvironmentString("NugetUrl");
 
 		 NuGetPush("./artefacts/PartPay.ZohoCrm.1.0.0.nupkg", new NuGetPushSettings {
 			 Source = nugetPublishUrl,
