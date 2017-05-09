@@ -22,6 +22,11 @@ namespace Deveel.Web.Zoho {
 			EntityName = moduleNameAttribute.Name;
 		}
 
+	    protected ZohoEntity(string entityName)
+	    {
+	        EntityName = entityName;
+	    }
+
 		protected ZohoEntity(SerializationInfo info, StreamingContext context) {
 			foreach (var entry in info) {
 				fields[entry.Name] = entry.Value;

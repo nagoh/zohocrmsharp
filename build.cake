@@ -6,7 +6,8 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var version = "1.0.0";
-
+var apiKey = Argument("NugetApiKey", "");
+var nugetPublishUrl = Argument("NugetUrl", "");
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
 //////////////////////////////////////////////////////////////////////
@@ -49,8 +50,7 @@ Task("Package")
 Task("Push")
 	.IsDependentOn("Package")
 	.Does(() => {
-		var apiKey = Argument("NugetApiKey", "");
-		var nugetPublishUrl = Argument("NugetUrl", "");
+		
 
 		if (string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(nugetPublishUrl))
 			return;
