@@ -29,6 +29,30 @@ Task("Build")
         settings.SetConfiguration(configuration));
 });
 
+Task("Package")
+	.IsDependentOn("Build")
+	.Does(() => 
+	{
+		  var nuGetPackSettings   = new NuGetPackSettings {
+			OutputDirectory         = "./artefacts"
+		  };
+
+		  NuGetPack("./src/Deveel.ZohoCRM/Deveel.ZohoCRM.nuspec", nuGetPackSettings);
+	});
+
+Task("Push")
+	.IsDependentOn("Package")
+	.Does(() => {
+		var apiKey = EnvironmentVariable("NugetApiKey");
+		var nugetPath = EnvironmentVariable("NugetUrl");
+
+		 NuGetPush("./artefacts/PartPay.ZohoCrm.1.0.0.nupkg", new NuGetPushSettings {
+			 Source = nugetPublishUrl,
+			 ApiKey = apiKey
+		 });
+		
+	});
+
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
