@@ -11,9 +11,6 @@ namespace Deveel.Web.Zoho {
 		}
 
 		public ZohoContact(string email, string firstName, string lastName) {
-			if (email == null)
-				throw new ArgumentNullException("email");
-
 			Email = email;
 			FirstName = firstName;
 			LastName = lastName;
