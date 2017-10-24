@@ -13,6 +13,7 @@ namespace Deveel.Web.Zoho {
 
 		private const string OwnerIdFieldName = "SMOWNERID";
 		private const string CreatorIdFieldName = "SMCREATORID";
+	    private const string ZohoIdFieldName = "id";
 
 		protected ZohoEntity() {
 			var moduleNameAttribute = Attribute.GetCustomAttribute(GetType(), typeof (ModuleNameAttribute)) as ModuleNameAttribute;
@@ -34,6 +35,12 @@ namespace Deveel.Web.Zoho {
 		}
 
 		internal string EntityName { get; private set; }
+
+	    public string ZohoId
+	    {
+	        get => GetString(ZohoIdFieldName);
+	        set => SetValue(ZohoIdFieldName, value);
+	    }
 
 		public string Id {
 			get { 
