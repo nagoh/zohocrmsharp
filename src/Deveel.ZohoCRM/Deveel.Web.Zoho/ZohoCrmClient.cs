@@ -6,11 +6,11 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
-
 using RestSharp;
 
 namespace Deveel.Web.Zoho {
-	public sealed partial class ZohoCrmClient {
+	public sealed partial class ZohoCrmClient : IZohoCrmClient
+	{
 		private readonly string authToken;
 
 		private const string BaseUrl = "https://crm.zoho.com/crm/private/xml/";

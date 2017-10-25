@@ -55,6 +55,7 @@
     <Compile Include="Deveel.Web.Zoho\AccountDefaultFields.cs" />
     <Compile Include="Deveel.Web.Zoho\AllowInsertsAttribute.cs" />
     <Compile Include="Deveel.Web.Zoho\AllowMultipleInsertsAttribute.cs" />
+    <Compile Include="Deveel.Web.Zoho\IZohoCrmClient.cs" />
     <Compile Include="Deveel.Web.Zoho\UserContext.cs" />
     <Compile Include="Deveel.Web.Zoho\UserType.cs" />
     <Compile Include="Deveel.Web.Zoho\ConditionOperator.cs" />
