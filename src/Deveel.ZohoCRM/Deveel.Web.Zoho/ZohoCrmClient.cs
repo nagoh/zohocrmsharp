@@ -24,7 +24,6 @@ namespace Deveel.Web.Zoho {
 		}
 
 		public InsertDuplicateCheck DuplicateCheck { get; set; }
-        public 
 
 		public bool? InsertApproval { get; set; }
 
