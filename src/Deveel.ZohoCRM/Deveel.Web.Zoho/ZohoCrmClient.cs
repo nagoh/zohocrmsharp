@@ -6,7 +6,7 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
-
+using Deveel.Web.Deveel.Web.Zoho;
 using RestSharp;
 
 namespace Deveel.Web.Zoho {
@@ -124,44 +124,52 @@ namespace Deveel.Web.Zoho {
 			return response.LoadCollectionFromResul<T>();
 		}
 
-		private ZohoInsertResponse PostData(string module, string method, IDictionary<string, string> parameters, string xmlData) {
-			if (module == null)
-				throw new ArgumentNullException("module");
-			if (method == null)
-				throw new ArgumentNullException("method");
-
-			var client = new RestClient(BaseUrl);
-			var request = new RestRequest(Method.POST);
-			request.Resource = "{module}/{method}";
-			request.AddParameter("module", module, ParameterType.UrlSegment);
-			request.AddParameter("method", method, ParameterType.UrlSegment);
-			request.AddParameter("authtoken", authToken);
-			request.AddParameter("scope", "crmapi");
-			if (method == "insertRecords") {
-				if (DuplicateCheck != InsertDuplicateCheck.None)
-					request.AddParameter("duplicateCheck", (int) DuplicateCheck);
-			    if (DuplicateCheck == InsertDuplicateCheck.Update)
-			        request.AddParameter("version", 4);
-				if (InsertApproval != null)
-					request.AddParameter("isApproval", InsertApproval.Value);
-			}
-
-			if (parameters != null) {
-				foreach (var parameter in parameters) {
-					request.AddParameter(parameter.Key, parameter.Value);
-				}
-			}
-
-			if (!String.IsNullOrEmpty(xmlData))
-				request.AddParameter("xmlData", xmlData);
-
-			var response = client.Execute(request);
-			if (response.StatusCode != HttpStatusCode.OK)
-				throw response.ErrorException;
-
-			return new ZohoInsertResponse(module, method, response.Content);
+		private ZohoInsertResponse PostData(string module, string method, IDictionary<string, string> parameters, string xmlData)
+		{
+		    return new ZohoInsertResponse(module, method, PostDataRaw(module, method, parameters, xmlData));
 		}
 
+
+	    private string PostDataRaw(string module, string method, IDictionary<string, string> parameters, string xmlData, int version = 1)
+	    {
+	        if (module == null)
+	            throw new ArgumentNullException("module");
+	        if (method == null)
+	            throw new ArgumentNullException("method");
+
+	        var client = new RestClient(BaseUrl);
+	        var request = new RestRequest(Method.POST);
+	        request.Resource = "{module}/{method}";
+	        request.AddParameter("module", module, ParameterType.UrlSegment);
+	        request.AddParameter("method", method, ParameterType.UrlSegment);
+	        request.AddParameter("authtoken", authToken);
+	        request.AddParameter("scope", "crmapi");
+	        request.AddParameter("version", version);
+	        if (method == "insertRecords")
+	        {
+	            if (DuplicateCheck != InsertDuplicateCheck.None)
+	                request.AddParameter("duplicateCheck", (int)DuplicateCheck);
+	            if (InsertApproval != null)
+	                request.AddParameter("isApproval", InsertApproval.Value);
+	        }
+
+	        if (parameters != null)
+	        {
+	            foreach (var parameter in parameters)
+	            {
+	                request.AddParameter(parameter.Key, parameter.Value);
+	            }
+	        }
+
+	        if (!String.IsNullOrEmpty(xmlData))
+	            request.AddParameter("xmlData", xmlData);
+
+	        var response = client.Execute(request);
+	        if (response.StatusCode != HttpStatusCode.OK)
+	            throw response.ErrorException;
+
+	        return response.Content;
+	    }
 		private ZohoEntityCollection<T> Search<T>(string module, IEnumerable<string> selectColumns, ZohoSearchCondition searchCondition) where T : ZohoEntity {
 			var parameters = GetListOptionsParameters(module, new ListOptions {SelectColumns = selectColumns}, true);
 			parameters.Add("searchCondition", searchCondition.ToString());
@@ -199,6 +207,29 @@ namespace Deveel.Web.Zoho {
 			var xmlData = collection.ToXmlString();
 			return PostData(moduleName, "insertRecords", null, xmlData);
 		}
+
+	    public ZohoBulkUpsertRepsonse<T> BulkUpsertRecords<T>(IList<T> records) where T : ZohoEntity
+	    {
+	        AssertTypeIsNotAbstract(typeof(T));
+	        AssertAllowInserts(typeof(T));
+	        AssertAllowMultipleInserts(typeof(T), records);
+
+	        var collection = new ZohoEntityCollection<T>();
+	        foreach (var record in records)
+	        {
+	            collection.Add(record);
+	        }
+
+	        var moduleName = ModuleName(typeof(T));
+	        var xmlData = collection.ToXmlString();
+	        this.DuplicateCheck = InsertDuplicateCheck.Update;
+
+            var rawHtmlRepsonse = PostDataRaw(moduleName, "insertRecords", null, xmlData, 4);
+
+            var response = new ZohoBulkUpsertRepsonse<T>(rawHtmlRepsonse, requestItems: records.ToList());
+
+            return response;
+        }
 
 		public ZohoInsertResponse InsertRecord<T>(T record) where T : ZohoEntity {
 			return InsertRecords(new ZohoEntityCollection<T> { record });

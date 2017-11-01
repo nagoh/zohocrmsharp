@@ -14,6 +14,7 @@ namespace Deveel.Web.Zoho {
 		private const string OwnerIdFieldName = "SMOWNERID";
 		private const string CreatorIdFieldName = "SMCREATORID";
 	    private const string ZohoIdFieldName = "id";
+	    internal int RowNumber;
 
 		protected ZohoEntity() {
 			var moduleNameAttribute = Attribute.GetCustomAttribute(GetType(), typeof (ModuleNameAttribute)) as ModuleNameAttribute;
@@ -257,7 +258,8 @@ namespace Deveel.Web.Zoho {
 		internal virtual void AppendTo(XElement parent, int rowNum = 1) {
 			var element = new XElement("row");
 			element.SetAttributeValue("no", rowNum);
-			AppendFieldsToRow(element);
+		    RowNumber = rowNum;
+            AppendFieldsToRow(element);
 			parent.Add(element);
 		}
 

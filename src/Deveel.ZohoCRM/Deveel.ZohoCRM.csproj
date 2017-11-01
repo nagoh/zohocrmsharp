@@ -73,6 +73,7 @@
     <Compile Include="Deveel.Web.Zoho\ZohoAccount.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoAccountContext.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoAttachment.cs" />
+    <Compile Include="Deveel.Web.Zoho\ZohoBulkUpsertRepsonse.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoContact.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoContactContext.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoCrmClient.cs" />
