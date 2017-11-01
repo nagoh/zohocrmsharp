@@ -6,11 +6,11 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
+
 using RestSharp;
 
 namespace Deveel.Web.Zoho {
-	public sealed partial class ZohoCrmClient : IZohoCrmClient
-	{
+	public sealed partial class ZohoCrmClient : IZohoCrmClient{
 		private readonly string authToken;
 
 		private const string BaseUrl = "https://crm.zoho.com/crm/private/xml/";
@@ -24,6 +24,7 @@ namespace Deveel.Web.Zoho {
 		}
 
 		public InsertDuplicateCheck DuplicateCheck { get; set; }
+        public 
 
 		public bool? InsertApproval { get; set; }
 
@@ -140,6 +141,8 @@ namespace Deveel.Web.Zoho {
 			if (method == "insertRecords") {
 				if (DuplicateCheck != InsertDuplicateCheck.None)
 					request.AddParameter("duplicateCheck", (int) DuplicateCheck);
+			    if (DuplicateCheck == InsertDuplicateCheck.Update)
+			        request.AddParameter("version", 4);
 				if (InsertApproval != null)
 					request.AddParameter("isApproval", InsertApproval.Value);
 			}
