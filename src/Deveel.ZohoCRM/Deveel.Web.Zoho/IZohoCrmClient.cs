@@ -32,6 +32,7 @@ namespace Deveel.Web.Zoho
         ZohoUsersResponse GetUsers(UserType userType);
         ZohoInsertResponse InsertRecord<T>(T record) where T : ZohoEntity;
         ZohoInsertResponse InsertRecords<T>(IEnumerable<T> records) where T : ZohoEntity;
+        ZohoBulkUpsertRepsonse<T> BulkUpsertRecords<T>(IList<T> records) where T : ZohoEntity;
         ZohoEntityCollection<T> Search<T>(string column, ConditionOperator @operator, object value) where T : ZohoEntity;
         ZohoEntityCollection<T> Search<T>(ZohoSearchCondition searchCondition) where T : ZohoEntity;
         ZohoEntityCollection<T> Search<T>(ZohoSearchCondition searchCondition, IEnumerable<string> selectColumns) where T : ZohoEntity;

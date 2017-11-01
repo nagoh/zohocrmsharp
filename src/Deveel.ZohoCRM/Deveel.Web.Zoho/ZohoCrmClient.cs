@@ -6,7 +6,6 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
-using Deveel.Web.Deveel.Web.Zoho;
 using RestSharp;
 
 namespace Deveel.Web.Zoho {

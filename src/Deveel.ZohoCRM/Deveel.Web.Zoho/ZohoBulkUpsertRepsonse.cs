@@ -5,9 +5,8 @@ using System.Text;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.XPath;
-using Deveel.Web.Zoho;
 
-namespace Deveel.Web.Deveel.Web.Zoho
+namespace Deveel.Web.Zoho
 {
     public class ZohoBulkUpsertRepsonse<T> where T : ZohoEntity
     {
