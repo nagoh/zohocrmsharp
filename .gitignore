@@ -11,5 +11,5 @@ TestResults
 /tools
 /build
 /artefacts
-/src/Deveel.ZohoCRM.Tests/Deveel.Web.Zoho/authToken.txt
+src/Deveel.ZohoCRM.Tests/authToken.txt
 /src/Deveel.ZohoCRM.Tests/authToken.txt
