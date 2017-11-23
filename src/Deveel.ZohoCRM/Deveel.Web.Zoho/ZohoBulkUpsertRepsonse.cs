@@ -25,7 +25,8 @@ namespace Deveel.Web.Zoho
                 // ReSharper disable once AssignNullToNotNullAttribute
                 var rowNumber = int.Parse(element.Attribute("no")?.Value);
                 var requestItem = requestItems.SingleOrDefault(x => x.RowNumber == rowNumber);
-                Results.Add(new ZohoBulkUpsertResponseItem<T>(rowNumber, requestItem, GetResponseItem(element.Elements().First())));
+                var responseItem = GetResponseItem(element.Elements().First());
+                Results.Add(new ZohoBulkUpsertResponseItem<T>(rowNumber, requestItem, responseItem));
             }
         }
 
@@ -59,7 +60,8 @@ namespace Deveel.Web.Zoho
 
         private string GetDetailsValue(XElement element, string valName)
         {
-            return element.XPathSelectElement($"//FL[@val=\"{valName}\"]").Value;
+            var xpath = string.Format(@"FL[@val=""{0}""]", valName);
+            return element.XPathSelectElement(xpath).Value;
         }
 
         internal ZohoBulkUpsertRepsonse(List<ZohoBulkUpsertResponseItem<T>> responseItems)

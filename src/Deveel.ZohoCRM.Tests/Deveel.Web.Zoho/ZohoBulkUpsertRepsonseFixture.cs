@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Schema;
 using Deveel.Web.Zoho;
 using NUnit.Framework;
 
@@ -110,6 +111,31 @@ namespace Deveel.Web.Deveel.Web.Zoho
 
             Assert.NotNull(error);
             Assert.AreEqual("4832", error.Code);
+        }
+
+
+        [Test]
+        public void shoudl_return_responseItem_with_requestItem()
+        {
+            var response = @"<?xml version=""1.0"" encoding=""UTF-8"" ?>
+                                <response uri=""/crm/private/xml/Potentials/insertRecords"">
+                                    <result>
+                                        <row no=""1"">
+                                            <success><code>2001</code><details><FL val=""Id"">2829458000000286010</FL><FL val=""Created Time"">2017-11-23 20:29:23</FL><FL val=""Modified Time"">2017-11-23 20:31:38</FL><FL val=""Created By""><![CDATA[Sam McGoldrick]]></FL><FL val=""Modified By""><![CDATA[Sam McGoldrick]]></FL></details></success>
+                                        </row>
+                                        <row no=""2"">
+                                            <success><code>2001</code><details><FL val=""Id"">2829458000000286011</FL><FL val=""Created Time"">2017-11-23 20:29:23</FL><FL val=""Modified Time"">2017-11-23 20:31:38</FL><FL val=""Created By""><![CDATA[Sam McGoldrick]]></FL><FL val=""Modified By""><![CDATA[Sam McGoldrick]]></FL></details></success>
+                                        </row>
+                                    </result>
+                                </response>";
+
+            var potential1 = new ZohoPotential("") { RowNumber = 1 };
+            var potential2 = new ZohoPotential("") { RowNumber = 2 };
+
+            var upsertResponse = new ZohoBulkUpsertRepsonse<ZohoPotential>(response, new List<ZohoPotential>{ potential2, potential1 });
+            var resultItems = upsertResponse.Results.Select(x => x.ResponseItem).Cast<ZohoDetailsResponseItem>().ToList();
+
+            Assert.AreNotEqual(resultItems[0].Id, resultItems[1].Id);
         }
     }
 }
