@@ -64,7 +64,7 @@ namespace Deveel.Web.Zoho
             return element.XPathSelectElement(xpath).Value;
         }
 
-        internal ZohoBulkUpsertRepsonse(List<ZohoBulkUpsertResponseItem<T>> responseItems)
+        public ZohoBulkUpsertRepsonse(List<ZohoBulkUpsertResponseItem<T>> responseItems)
         {
             Results = responseItems;
         }
