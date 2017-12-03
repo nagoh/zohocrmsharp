@@ -13,11 +13,11 @@ namespace Deveel.Web.Deveel.Web.Zoho
     {
         private ZohoBulkUpsertResponseItem<ZohoPotential> ZohoPotentialError =>
             new ZohoBulkUpsertResponseItem<ZohoPotential>(1, new ZohoPotential(""),
-                new ZohoErrorRepsonseItem() {Code = "2012", Error = "Error"});
+                new ZohoErrorRepsonseItem() {Code = 2012, Error = "Error"});
 
         private ZohoBulkUpsertResponseItem<ZohoPotential> ZohoPotentialDetail=>
             new ZohoBulkUpsertResponseItem<ZohoPotential>(0, new ZohoPotential(""),
-                new ZohoDetailsResponseItem() { Code = "2001", Id= "120394239483" });
+                new ZohoDetailsResponseItem() { Code = 2001, Id= "120394239483" });
 
         [Test]
         public void should_create_errors_and_successes_in_same_response_list()
@@ -67,7 +67,7 @@ namespace Deveel.Web.Deveel.Web.Zoho
 
             Assert.That(details.CreatedBy, Is.EqualTo("aghil123"));
             Assert.That(details.Id, Is.EqualTo("2000000120006"));
-            Assert.That(details.Code, Is.EqualTo("2000"));
+            Assert.That(details.Code, Is.EqualTo(2000));
         }
 
         [Test]
@@ -110,7 +110,7 @@ namespace Deveel.Web.Deveel.Web.Zoho
             var error = item.Results.Select(x => x.ResponseItem).OfType<ZohoErrorRepsonseItem>().First();
 
             Assert.NotNull(error);
-            Assert.AreEqual("4832", error.Code);
+            Assert.AreEqual(4832, error.Code);
         }
 
 

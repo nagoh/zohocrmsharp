@@ -8,6 +8,14 @@ using System.Xml.XPath;
 
 namespace Deveel.Web.Zoho
 {
+    public static class ZohoBulkUpsertResponseCodes
+    {
+        public const int RecordAddedSuccessfully = 2000;
+        public const int RecordUpdatedSuccessfully = 2001;
+        public const int RecordAlreadyExists = 2002;
+    }
+
+
     public class ZohoBulkUpsertRepsonse<T> where T : ZohoEntity
     {
         public ZohoBulkUpsertRepsonse(string response, List<T> requestItems)
@@ -38,7 +46,7 @@ namespace Deveel.Web.Zoho
                     var details = element.Element("details");
                     return new ZohoDetailsResponseItem()
                     {
-                        Code = element.Element("code").Value,
+                        Code = int.Parse(element.Element("code").Value),
                         CreatedBy = GetDetailsValue(details, "Created By"),
                         Id = GetDetailsValue(details, "Id"),
                         ModifiedDateTime = DateTime.Parse(GetDetailsValue(details, "Modified Time")),
@@ -49,7 +57,7 @@ namespace Deveel.Web.Zoho
                 case "error":
                     return new ZohoErrorRepsonseItem
                     {
-                        Code = element.Element("code").Value,
+                        Code = int.Parse(element.Element("code").Value),
                         Error = element.Element("details").Value
                     };
 
@@ -92,7 +100,7 @@ namespace Deveel.Web.Zoho
 
     public abstract class ZohoResponseItem
     {
-        public string Code { get; set; }
+        public int Code { get; set; }
     }
 
     public class ZohoDetailsResponseItem : ZohoResponseItem
