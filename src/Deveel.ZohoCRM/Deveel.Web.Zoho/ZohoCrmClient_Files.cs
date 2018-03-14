@@ -78,53 +78,6 @@ namespace Deveel.Web.Zoho {
 			return response.Code == "4800";
 		}
 
-		public string UploadPhotoToRecord<T>(string id, string contentType, byte[] data) {
-			if (typeof(T) != typeof(ZohoLead) &&
-				typeof(T) != typeof(ZohoContact))
-				throw new ArgumentException("Photos can be uploaded only to Leads and Contacts.");
-
-			var response = PostFile(ModuleName<T>(), "uploadPhoto", id, data, "photo", contentType);
-			response.ThrowIfError();
-			return response.RecordDetails.First().Id;
-		}
-
-		public string UploadPhotoToRecord<T>(string id, string contentType, Stream inputStream) where T : ZohoEntity {
-			if (inputStream == null)
-				throw new ArgumentNullException("inputStream");
-
-			var bytes = ReadFromStream(inputStream);
-			return UploadPhotoToRecord<T>(id, contentType, bytes);
-		}
-
-		public string UploadPhotoToRecord<T>(string id, string contentType, string filePath) where T : ZohoEntity {
-			if (!File.Exists(filePath))
-				throw new ArgumentException("File specified was not found in the system.");
-
-			byte[] bytes;
-			using (var inputStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-				bytes = ReadFromStream(inputStream);
-			}
-
-			return UploadPhotoToRecord<T>(id, contentType, bytes);
-		}
-
-		public string UploadPhotoToRecord<T>(string id, string contentType, Uri uri) where T : ZohoEntity {
-			if (uri == null)
-				throw new ArgumentNullException("uri");
-
-			byte[] bytes;
-
-			using (var client = new WebClient()) {
-				var inputStream = client.OpenRead(uri);
-				if (inputStream == null)
-					throw new FileNotFoundException("The uri specified returned no file.");
-
-				bytes = ReadFromStream(inputStream);
-			}
-
-			return UploadPhotoToRecord<T>(id, contentType, bytes);
-		}
-
 		private ZohoInsertResponse PostFile(string module, string method, string id, byte[] bytes, string fileName, string contentType) {
 			if (module == null)
 				throw new ArgumentNullException("module");

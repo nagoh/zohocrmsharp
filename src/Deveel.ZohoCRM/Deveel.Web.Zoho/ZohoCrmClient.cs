@@ -44,16 +44,17 @@ namespace Deveel.Web.Zoho {
 				throw new ArgumentException("Entity " + type.Name + " cannot be inserted.");
 		}
 
-		private static string ModuleName(Type entityType) {
-			var entityName = Attribute.GetCustomAttribute(entityType, typeof(ModuleNameAttribute)) as ModuleNameAttribute;
-			if (entityName == null)
+		private static string ModuleName<T>(T entity = null) where T : ZohoEntity {
+			var entityName = Attribute.GetCustomAttribute(typeof(T), typeof(ModuleNameAttribute)) as ModuleNameAttribute;
+		    var moduleName = entityName?.Name;
+
+		    if (moduleName == null)
+		        moduleName = entity?.EntityName;
+
+            if (moduleName == null)
 				throw new ArgumentException();
 
-			return entityName.Name;
-		}
-
-		private static string ModuleName<T>() {
-			return ModuleName(typeof (T));
+			return moduleName;
 		}
 
 		private static string SelectColumns(string module, IEnumerable<string> selectColumns) {
@@ -180,29 +181,32 @@ namespace Deveel.Web.Zoho {
 		}
 
 		public ZohoEntityCollection<T> Search<T>(ZohoSearchCondition searchCondition, IEnumerable<string> selectColumns) where T : ZohoEntity {
-			return Search<T>(ModuleName(typeof(T)), selectColumns, searchCondition);
+			return Search<T>(ModuleName<T>(), selectColumns, searchCondition);
 		}
 
 		public ZohoEntityCollection<T> Search<T>(string column, ConditionOperator @operator, object value) where T : ZohoEntity {
 			return Search<T>(new ZohoSearchCondition(column, @operator, value));
 		}
 
-		public ZohoInsertResponse InsertRecords<T>(IEnumerable<T> records) where T : ZohoEntity {
-			AssertTypeIsNotAbstract(typeof (T));
-			AssertAllowInserts(typeof (T));
-			AssertAllowMultipleInserts(typeof (T), records);
+		public ZohoInsertResponse InsertRecords<T>(IEnumerable<T> records) where T : ZohoEntity
+		{
+		    var recordsToInsert = records.ToList();
 
-			ZohoEntityCollection<T> collection;
-			if (records is ZohoEntityCollection<T>) {
-				collection = (ZohoEntityCollection<T>) records;
+            AssertTypeIsNotAbstract(typeof (T));
+			AssertAllowInserts(typeof (T));
+			AssertAllowMultipleInserts(typeof (T), recordsToInsert);
+
+		    ZohoEntityCollection<T> collection;
+			if (recordsToInsert.AsEnumerable() is ZohoEntityCollection<T>) {
+				collection = (ZohoEntityCollection<T>)recordsToInsert.AsEnumerable();
 			} else {
 				collection = new ZohoEntityCollection<T>();
-				foreach (var record in records) {
+				foreach (var record in recordsToInsert) {
 					collection.Add(record);
 				}
 			}
 
-			var moduleName = ModuleName(typeof (T));
+			var moduleName = ModuleName(recordsToInsert.FirstOrDefault());
 			var xmlData = collection.ToXmlString();
 			return PostData(moduleName, "insertRecords", null, xmlData);
 		}
@@ -219,7 +223,7 @@ namespace Deveel.Web.Zoho {
 	            collection.Add(record);
 	        }
 
-	        var moduleName = ModuleName(typeof(T));
+	        var moduleName = ModuleName(records.FirstOrDefault());
 	        var xmlData = collection.ToXmlString();
 	        this.DuplicateCheck = InsertDuplicateCheck.Update;
 
@@ -235,7 +239,7 @@ namespace Deveel.Web.Zoho {
 		}
 
 		public T GetRecordById<T>(string id) where T :ZohoEntity {
-			var collection = GetEntities<T>(ModuleName(typeof (T)), "getRecordById", new Dictionary<string, string> {{"id", id}});
+			var collection = GetEntities<T>(ModuleName<T>(), "getRecordById", new Dictionary<string, string> {{"id", id}});
 			if (collection.Count == 0)
 				return null;
 			if (collection.Count > 1)
@@ -291,7 +295,7 @@ namespace Deveel.Web.Zoho {
 			AssertAllowInserts(typeof(T));
 
 			var collection = new ZohoEntityCollection<T> {record};
-			var moduleName = ModuleName(typeof(T));
+		    var moduleName = ModuleName<T>();
 			var xmlData = collection.ToXmlString();
 			var response = PostData(moduleName, "updateRecords", new Dictionary<string, string> {{"id", id}}, xmlData);
 			if (response.RecordDetails.Count() != 1)
@@ -312,11 +316,11 @@ namespace Deveel.Web.Zoho {
 			return DeleteRecordById<T>(id);
 		}
 
-		public bool DeleteRecordById<T>(string id) {
+		public bool DeleteRecordById<T>(string id) where T : ZohoEntity {
 			AssertTypeIsNotAbstract(typeof(T));
 			AssertAllowInserts(typeof(T));
 
-			var moduleName = ModuleName(typeof(T));
+			var moduleName = ModuleName<T>();
 			var response = GetResponse(moduleName, "deleteRecords", new Dictionary<string, string> { { "id", id } });
 			return response.Code == "5000";
 		}

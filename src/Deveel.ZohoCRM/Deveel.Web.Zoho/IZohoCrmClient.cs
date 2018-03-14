@@ -12,7 +12,7 @@ namespace Deveel.Web.Zoho
        bool? InsertApproval { get; set; }
        UserContext CreateUserContext(string userEmail);
        bool DeleteRecord<T>(T record) where T : ZohoEntity;
-       bool DeleteRecordById<T>(string id);
+       bool DeleteRecordById<T>(string id) where T : ZohoEntity;
        bool DeleteRecordFile<T>(string fileId) where T : ZohoEntity;
        DownloadFile DownloadRecordFile<T>(string fileId) where T : ZohoEntity;
        ZohoEntityContext<T> GetContext<T>() where T : ZohoEntity;
@@ -42,9 +42,5 @@ namespace Deveel.Web.Zoho
         string UploadFileToRecord<T>(string id, string fileName, string contentType, byte[] content) where T : ZohoEntity;
         string UploadFileToRecord<T>(string recordId, string fileName, string contentType, Uri uri) where T : ZohoEntity;
         string UploadFileToRecord<T>(string id, string fileName, string contentType, Stream inputStream) where T : ZohoEntity;
-        string UploadPhotoToRecord<T>(string id, string contentType, byte[] data);
-        string UploadPhotoToRecord<T>(string id, string contentType, Stream inputStream) where T : ZohoEntity;
-        string UploadPhotoToRecord<T>(string id, string contentType, string filePath) where T : ZohoEntity;
-        string UploadPhotoToRecord<T>(string id, string contentType, Uri uri) where T : ZohoEntity;
     }
 }

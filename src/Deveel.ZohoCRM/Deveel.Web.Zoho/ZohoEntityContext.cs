@@ -74,23 +74,6 @@ namespace Deveel.Web.Zoho {
 			return Client.UploadFileToRecord<T>(id, fileName, contentType, filePath);
 		}
 
-		public string UploadPhoto(string id, string contentType, byte[] bytes) {
-			return Client.UploadPhotoToRecord<T>(id, contentType, bytes);
-		}
-
-		public string UploadPhoto(string id, string contentType, Stream inputStream) {
-			return Client.UploadPhotoToRecord<T>(id, contentType, inputStream);
-		}
-
-		public string UploadPhoto(string id, string contentType, Uri uri) {
-			return Client.UploadPhotoToRecord<T>(id, contentType, uri);
-		}
-
-		public string UploadPhoto(string id, string contentType, string filePath) {
-			return Client.UploadPhotoToRecord<T>(id, contentType, filePath);
-		}
-
-
 		public ZohoEntityCollection<T> Search(ZohoSearchCondition condition) {
 			return Search(condition, null);
 		}
