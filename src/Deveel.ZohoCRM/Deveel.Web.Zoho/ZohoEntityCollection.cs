@@ -20,10 +20,10 @@ namespace Deveel.Web.Zoho {
 
 		private ZohoEntityCollection(ICollection<T> collection, bool readOnly) {
 			var entityName = Attribute.GetCustomAttribute(typeof (T), typeof (ModuleNameAttribute)) as ModuleNameAttribute;
-			if (entityName == null)
-				throw new InvalidOperationException();
+			//if (entityName == null)
+			//	throw new InvalidOperationException();
 
-			EntityName = entityName.Name;
+			EntityName = entityName?.Name;
 			IsReadOnly = readOnly;
 			this.collection = collection;
 		}
@@ -45,6 +45,10 @@ namespace Deveel.Web.Zoho {
 
 		public void Add(T item) {
 			AssertNotReadOnly();
+
+		    if (string.IsNullOrEmpty(EntityName))
+		        EntityName = item?.EntityName;
+
 			collection.Add(item);
 		}
 
