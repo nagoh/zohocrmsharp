@@ -130,7 +130,7 @@ namespace Deveel.Web.Zoho {
 		}
 
 
-	    private string PostDataRaw(string module, string method, IDictionary<string, string> parameters, string xmlData, int version = 1)
+	    private string PostDataRaw(string module, string method, IDictionary<string, string> parameters, string xmlData, int version = 1, bool triggerWorkfow = false)
 	    {
 	        if (module == null)
 	            throw new ArgumentNullException("module");
@@ -145,6 +145,10 @@ namespace Deveel.Web.Zoho {
 	        request.AddParameter("authtoken", authToken);
 	        request.AddParameter("scope", "crmapi");
 	        request.AddParameter("version", version);
+
+            if (triggerWorkfow)
+                request.AddParameter("wfTrigger", "true");
+
 	        if (method == "insertRecords")
 	        {
 	            if (DuplicateCheck != InsertDuplicateCheck.None)
@@ -227,7 +231,7 @@ namespace Deveel.Web.Zoho {
 	        var xmlData = collection.ToXmlString();
 	        this.DuplicateCheck = InsertDuplicateCheck.Update;
 
-            var rawHtmlRepsonse = PostDataRaw(moduleName, "insertRecords", null, xmlData, 4);
+            var rawHtmlRepsonse = PostDataRaw(moduleName, "insertRecords", null, xmlData, 4, true);
 
             var response = new ZohoBulkUpsertRepsonse<T>(rawHtmlRepsonse, requestItems: records.ToList());
 
