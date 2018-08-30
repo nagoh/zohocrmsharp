@@ -32,7 +32,7 @@ namespace Deveel.Web.Zoho {
 
 		public string Email {
 			get { return GetString(ContactDefaultFields.Email); }
-			private set { SetValue(ContactDefaultFields.Email, value); }
+			set { SetValue(ContactDefaultFields.Email, value); }
 		}
 
 		public string AccountName {
