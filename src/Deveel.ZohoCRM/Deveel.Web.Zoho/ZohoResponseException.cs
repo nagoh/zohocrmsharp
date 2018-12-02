@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 
 namespace Deveel.Web.Zoho {
 	[Serializable]
@@ -14,6 +15,12 @@ namespace Deveel.Web.Zoho {
 		}
 
 		public string ErrorCode { get; private set; }
+
+		internal ZohoResponseException(string code, string message)
+			:base(message)
+		{
+			ErrorCode = code;
+		}
 
 		public override void GetObjectData(SerializationInfo info, StreamingContext context) {
 			info.AddValue("ErrorCode", ErrorCode);

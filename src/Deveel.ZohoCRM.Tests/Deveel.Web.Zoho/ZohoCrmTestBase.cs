@@ -9,13 +9,13 @@ namespace Deveel.Web.Zoho {
 	public abstract class ZohoCrmTestBase {
 		protected string AuthToken { get; private set; }
 
-		[TestFixtureSetUp]
+		[SetUp]
 		public void TextFixtureSetUp() {
 			var fileName = ConfigurationManager.AppSettings["authTokenFileName"];
 			if (String.IsNullOrEmpty(fileName))
 				fileName = "authToken.txt";
 
-			var filePath = Path.Combine(Environment.CurrentDirectory, fileName);
+			var filePath = Path.Combine(TestContext.CurrentContext.TestDirectory, fileName);
 			if (!File.Exists(filePath))
 				Assert.Fail("File " + filePath + " was not found!");
 
