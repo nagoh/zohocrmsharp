@@ -14,13 +14,13 @@ namespace Deveel.Web.Zoho {
 			ErrorCode = info.GetString("ErrorCode");
 		}
 
-	    internal ZohoResponseException(string code, string message)
-            :base(message)
-	    {
-	        ErrorCode = code;
-	    }
+		public string ErrorCode { get; private set; }
 
-	    public string ErrorCode { get; private set; }
+		internal ZohoResponseException(string code, string message)
+			:base(message)
+		{
+			ErrorCode = code;
+		}
 
 		public override void GetObjectData(SerializationInfo info, StreamingContext context) {
 			info.AddValue("ErrorCode", ErrorCode);
