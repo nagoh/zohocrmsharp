@@ -140,7 +140,7 @@ namespace Deveel.Web.Zoho {
 		}
 
 		private byte[] CreateTextFileContent() {
-			string fileName = Path.Combine(Environment.CurrentDirectory, "uploadFileTest.txt");
+			string fileName = Path.Combine(TestContext.CurrentContext.TestDirectory, "uploadFileTest.txt");
 
 			var memoryStream = new MemoryStream();
 			using (var inputStream = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) {

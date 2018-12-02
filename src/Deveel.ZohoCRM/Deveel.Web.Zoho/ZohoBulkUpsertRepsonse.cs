@@ -18,9 +18,10 @@ namespace Deveel.Web.Zoho
 
     public class ZohoBulkUpsertRepsonse<T> where T : ZohoEntity
     {
-        public ZohoBulkUpsertRepsonse(string response, List<T> requestItems)
+        public ZohoBulkUpsertRepsonse(string rawResponse, List<T> requestItems)
         {
-            var xDocument = XDocument.Parse(response);
+            var xDocument = XDocument.Parse(rawResponse);
+            ThrowIfError(xDocument.Root);
 
             Results = new List<ZohoBulkUpsertResponseItem<T>>();
             var resultNode = xDocument.Descendants("result").First();
@@ -36,6 +37,21 @@ namespace Deveel.Web.Zoho
                 var responseItem = GetResponseItem(element.Elements().First());
                 Results.Add(new ZohoBulkUpsertResponseItem<T>(rowNumber, requestItem, responseItem));
             }
+        }
+
+        private static void ThrowIfError(XElement parent)
+        {
+			if (parent.Name != "response")
+				return;
+
+			var firstChild = parent.Elements().First();
+			if (firstChild.Name != "error")
+                return;
+
+			var code = firstChild.Descendants("code").FirstOrDefault()?.Value ?? "0000";
+			var message = firstChild.Descendants("message").FirstOrDefault()?.Value ?? "Unknown error: " + firstChild;
+
+            throw new ZohoResponseException(code, message);
         }
 
         private ZohoResponseItem GetResponseItem(XElement element)

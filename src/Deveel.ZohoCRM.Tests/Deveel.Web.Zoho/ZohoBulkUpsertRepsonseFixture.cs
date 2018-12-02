@@ -137,5 +137,39 @@ namespace Deveel.Web.Deveel.Web.Zoho
 
             Assert.AreNotEqual(resultItems[0].Id, resultItems[1].Id);
         }
+
+        [Test]
+        public void should_throw_when_error_returned()
+        {
+            const string code = "4401";
+            const string message = "Unable to populate data, please check if mandatory value is entered correctly.";
+
+            var response =
+                $@"<response uri=""/crm/private/xml/Potentials/insertRecords"">
+                    <error>
+                        <code>{code}</code>
+                        <message>{message}</message>
+                    </error>
+                </response>";
+
+            var exception = Assert.Throws<ZohoResponseException>(() => new ZohoBulkUpsertRepsonse<ZohoPotential>(response, new List<ZohoPotential>()));
+            Assert.That(exception.ErrorCode, Is.EqualTo(code));
+            Assert.That(exception.Message, Is.EqualTo(message));
+        }
+
+        [Test]
+        public void should_throw_when_error_returned2()
+        {
+            var response =
+                $@"<response uri=""/crm/private/xml/Potentials/insertRecords"">
+                    <error>
+                        <unexpected></unexpected>
+                    </error>
+                </response>";
+
+            var exception = Assert.Throws<ZohoResponseException>(() => new ZohoBulkUpsertRepsonse<ZohoPotential>(response, new List<ZohoPotential>()));
+            Assert.That(exception.ErrorCode, Is.EqualTo("0000"));
+            StringAssert.StartsWith("Unknown error:", exception.Message);
+        }
     }
 }
