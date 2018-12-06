@@ -14,6 +14,9 @@ namespace Deveel.Web.Zoho {
 
 		private const string BaseUrl = "https://crm.zoho.com/crm/private/xml/";
 
+	    public Action<string> OnPostDataRawRequest = s => { };
+	    public Action<string> OnPostDataRawResponse = s => { };
+
 		public ZohoCrmClient(string authToken) {
 			if (authToken == null)
 				throw new ArgumentNullException("authToken");
@@ -137,6 +140,8 @@ namespace Deveel.Web.Zoho {
 	        if (method == null)
 	            throw new ArgumentNullException("method");
 
+	        this.OnPostDataRawRequest(xmlData);
+
 	        var client = new RestClient(BaseUrl);
 	        var request = new RestRequest(Method.POST);
 	        request.Resource = "{module}/{method}";
@@ -172,7 +177,9 @@ namespace Deveel.Web.Zoho {
 	        if (response.StatusCode != HttpStatusCode.OK)
 	            throw response.ErrorException;
 
-	        return response.Content;
+	        this.OnPostDataRawResponse(response.Content);
+
+            return response.Content;
 	    }
 		private ZohoEntityCollection<T> Search<T>(string module, IEnumerable<string> selectColumns, ZohoSearchCondition searchCondition) where T : ZohoEntity {
 			var parameters = GetListOptionsParameters(module, new ListOptions {SelectColumns = selectColumns}, true);
