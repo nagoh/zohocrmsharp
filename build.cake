@@ -35,6 +35,16 @@ Task("Build")
         settings.SetConfiguration(configuration));
 });
 
+Task("Run-Unit-Tests")
+    .IsDependentOn("Build")
+    .Does(() =>
+{
+    var testAssemblies = GetFiles("./src/**/bin/" + configuration + "/*.Tests.dll");
+	NUnit3(testAssemblies, new NUnit3Settings{
+		Where = "cat != Integration"
+	});
+});
+
 Task("Package")
 	.IsDependentOn("Build")
 	.Does(() => 
@@ -66,7 +76,7 @@ Task("Push")
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
-    .IsDependentOn("Build");
+    .IsDependentOn("Run-Unit-Tests");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION

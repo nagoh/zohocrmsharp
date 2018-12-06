@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace Deveel.Web.Deveel.Web.Zoho
 {
-    [TestFixture]
+    [TestFixture(Category = "Integration")]
     public class PotentialTest : ZohoCrmTestBase
     {
         private List<ZohoPotential> _potentials;

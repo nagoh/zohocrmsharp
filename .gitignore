@@ -13,3 +13,5 @@ TestResults
 /artefacts
 src/Deveel.ZohoCRM.Tests/authToken.txt
 /src/Deveel.ZohoCRM.Tests/authToken.txt
+TestResult.xml
+/src/.vs
