@@ -115,7 +115,7 @@ namespace Deveel.Web.Deveel.Web.Zoho
 
 
         [Test]
-        public void shoudl_return_responseItem_with_requestItem()
+        public void should_return_responseItem_with_requestItem()
         {
             var response = @"<?xml version=""1.0"" encoding=""UTF-8"" ?>
                                 <response uri=""/crm/private/xml/Potentials/insertRecords"">
