@@ -288,8 +288,20 @@ namespace Deveel.Web.Zoho {
 					// for the moment we always use CDATA to avoid errors given by
 					// invalid XML strings... in a later version we'll map this against
 					// the field type ...
-					fieldElement.Add(new XCData((string)value));
-				}
+
+                    // Need to split CData blocks by "]]>", since they can't be escaped within
+                    var parts = ((string) value).Split(new [] { "]]>" }, StringSplitOptions.None).ToArray();
+
+                    for (var i = 0; i < parts.Length; i++)
+                    {
+                        if (parts[i] != "")
+                            fieldElement.Add(new XCData(parts[i]));
+
+                        // Put back "]]>" as strings
+                        if (i != parts.Length - 1)
+                            fieldElement.Add("]]>");
+                    }
+                }
 
 				rowElement.Add(fieldElement);
 			}			
