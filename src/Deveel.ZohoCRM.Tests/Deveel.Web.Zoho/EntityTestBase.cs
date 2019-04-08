@@ -167,7 +167,6 @@ namespace Deveel.Web.Zoho {
             client.SetValue("EmailOptOut", value);
 
             // Assert
-            var expected = value ? value.ToString().ToLower() : null;
             Assert.That(client.GetValue<string>("EmailOptOut"), Is.EqualTo(value.ToString().ToLower()));
         }
 
