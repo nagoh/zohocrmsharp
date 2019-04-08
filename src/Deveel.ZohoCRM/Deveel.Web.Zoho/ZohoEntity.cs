@@ -169,7 +169,12 @@ namespace Deveel.Web.Zoho {
 			SetValue<DateTime>(fieldName, value);
 		}
 
-		public string GetString(string fieldName) {
+        public void SetValue(string fieldName, bool value)
+        {
+            SetValue<string>(fieldName, value.ToString().ToLower());
+        }
+
+        public string GetString(string fieldName) {
 			return GetValue<string>(fieldName);
 		}
 

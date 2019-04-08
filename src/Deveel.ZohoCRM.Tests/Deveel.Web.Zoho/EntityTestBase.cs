@@ -155,5 +155,33 @@ namespace Deveel.Web.Zoho {
 			var content = memoryStream.ToArray();
 			return content;
 		}
-	}
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ShouldStoreBooleansInLowerCase(bool value)
+        {
+            // Arrange
+            var client = new ZohoContact("some.email@partpay.co.nz");
+
+            // Act
+            client.SetValue("EmailOptOut", value);
+
+            // Assert
+            Assert.That(client.GetValue<string>("EmailOptOut"), Is.EqualTo(value.ToString().ToLower()));
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ShouldRestoreBooleansValue(bool value)
+        {
+            // Arrange
+            var client = new ZohoContact("some.email@partpay.co.nz");
+
+            // Act
+            client.SetValue("EmailOptOut", value);
+
+            // Assert
+            Assert.That(client.GetValue<bool>("EmailOptOut"), Is.EqualTo(value));
+        }
+    }
 }
