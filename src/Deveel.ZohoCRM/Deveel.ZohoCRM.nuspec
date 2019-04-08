@@ -19,6 +19,7 @@
     </dependencies>
   </metadata>
   <files>
+    <file src="bin\Release\net461\Deveel.ZohoCRM.dll" target="lib\net461\Deveel.ZohoCRM.dll"></file>
     <file src="bin\Release\netstandard2.0\Deveel.ZohoCRM.dll" target="lib\netstandard2.0\Deveel.ZohoCRM.dll"></file>
   </files>
 </package>
