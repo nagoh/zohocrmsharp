@@ -5,7 +5,7 @@ using System.IO;
 using NUnit.Framework;
 
 namespace Deveel.Web.Zoho {
-	[TestFixture]
+	[TestFixture(Category = "Integration")]
 	public abstract class ZohoCrmTestBase {
 		protected string AuthToken { get; private set; }
 

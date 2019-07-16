@@ -6,8 +6,8 @@ using System.Text;
 using NUnit.Framework;
 
 namespace Deveel.Web.Zoho {
-	[TestFixture]
-	public abstract class EntityTestBase<T> : ZohoCrmTestBase where T : ZohoEntity {
+	[TestFixture(Category = "Integration")]
+    public abstract class EntityTestBase<T> : ZohoCrmTestBase where T : ZohoEntity {
 		protected abstract string Module { get; }
 
 		protected abstract T CreateEntry(int index);

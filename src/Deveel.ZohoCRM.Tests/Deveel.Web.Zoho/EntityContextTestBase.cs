@@ -4,8 +4,8 @@ using System.Linq;
 using NUnit.Framework;
 
 namespace Deveel.Web.Zoho {
-	[TestFixture]
-	public abstract class EntityContextTestBase<T> : ZohoCrmTestBase where T : ZohoEntity {
+	[TestFixture(Category = "Integration")]
+    public abstract class EntityContextTestBase<T> : ZohoCrmTestBase where T : ZohoEntity {
 		protected abstract string ModuleName { get; }
 
 		protected abstract T CreateTestObject();

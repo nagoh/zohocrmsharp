@@ -3,7 +3,7 @@
 using NUnit.Framework;
 
 namespace Deveel.Web.Zoho {
-	[TestFixture]
+	[TestFixture(Category = "Integration")]
 	public sealed class UsersTest : ZohoCrmTestBase {
 		[Test]
 		public void GetUsers() {
